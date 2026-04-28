@@ -1,6 +1,6 @@
-package FinalProject.Part1;
+package Part1;
 
-public class Item {
+public class Item implements Comparable<Item>{
     private String name;
     private String itemType;
     private int value;
@@ -36,11 +36,18 @@ public class Item {
     }
     public void setItemType(String i)
     {
-        itemType = i;
+        if (i.equalsIgnoreCase("WEAPON")|| i.equalsIgnoreCase("ARMOR") ||
+         i.equalsIgnoreCase("POTION"))
+        itemType = i.toUpperCase();
+        else
+        System.out.println("Invalid item storage type!");
     }
     public void setValue(int v)
     {
+        if (Character.clamp(1, Integer.MAX_VALUE, v))
         value =v;
+        else
+        System.out.println("Item value too low!");
     }
     public void setDescription(String d)
     {
@@ -53,5 +60,10 @@ public class Item {
         String ret = "[" + itemType + "] " + name + " (Value : " + value + ")\n";
         ret += ">> " + description;
         return ret;
+    }
+
+    @Override
+    public int compareTo(Item o) {
+       return ((Integer)(value)).compareTo(o.value);
     }
 }

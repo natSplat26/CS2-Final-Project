@@ -1,8 +1,8 @@
-package FinalProject.Part1;
+package Part1;
 
 import java.util.ArrayList;
 
-public class Room {
+public class Room implements Interactable {
     private String name;
     private String description;
     private ArrayList<Item> items;
@@ -75,5 +75,22 @@ public class Room {
             ret += "=";
         ret += "#";
         return ret;
+    }
+
+    @Override
+    public void interact(Hero hero) {
+        visited = true;
+        System.out.println(this);
+        for (Item item : items) {
+            if (item instanceof Potion)
+            ((Potion) (item)).interact(hero);
+        if (item instanceof Weapon)
+            ((Weapon) (item)).interact(hero);
+        if (item instanceof Armor)
+            ((Armor) (item)).interact(hero);
+        }
+        for (Monster m : monsters) {
+            hero.attack(m);
+        }
     }
 }
