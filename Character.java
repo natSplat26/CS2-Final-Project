@@ -1,6 +1,6 @@
-package FinalProject.Part1;
+package Part1;
 
-public class Character {
+public abstract class Character {
     private String name;
     private int health;
     private int maxHealth;
@@ -48,7 +48,10 @@ public class Character {
     
     public void setHealth(int health)
     {
+        if (clamp(0, maxHealth, health))
         this.health = health;
+        else
+        System.out.println("Value for health either too high or too low!");
     }
 
     public void setMaxHealth(int maxHealth)
@@ -58,12 +61,18 @@ public class Character {
 
     public void setAttackPower(int attackPower)
     {
+        if (clamp(1,Integer.MAX_VALUE, attackPower ))
         this.attackPower = attackPower;
+        else
+        System.out.println("Value for attack power is too low!");
     }
 
     public void setDefense(int defense)
     {
+        if (clamp(0, Integer.MAX_VALUE, defense))
         this.defense = defense;
+        else
+        System.out.println("Value for defense is too low!");
     }
 
     @Override
@@ -113,4 +122,14 @@ public class Character {
         temp += "+";
         return temp;
     }
+
+    public static boolean clamp(int low,int high,int in)
+    {
+        if (in < low)
+            return false;
+        if (in > high)
+            return false;
+        return true;
+    }
+    public abstract void attack(Character target);
 }

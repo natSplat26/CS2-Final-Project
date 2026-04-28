@@ -1,6 +1,6 @@
-package FinalProject.Part1;
+package Part1;
 
-public class Monster extends Character{
+public class Monster extends Character {
     private int rewardXP;
     private String monsterType;
     
@@ -38,5 +38,12 @@ public class Monster extends Character{
         ret += "| Reward XP : " + rewardXP +"\t|\n";
         ret = endingBar(ret);
         return ret;
+    }
+
+    @Override
+    public void attack(Character target)
+    {
+        System.out.println(monsterType + "Snarls and strikes!");
+        target.setHealth(target.getHealth() - (this.getAttackPower()-target.getDefense()));
     }
 }
