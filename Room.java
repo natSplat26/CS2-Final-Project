@@ -1,6 +1,8 @@
 package Part1;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Room implements Interactable {
     private String name;
@@ -8,7 +10,7 @@ public class Room implements Interactable {
     private ArrayList<Item> items;
     private ArrayList<Monster> monsters;
     private boolean visited;
-
+    private Queue<Monster> spawnQueue;
     public Room(String n,String d)
     {
         this.name = n;
@@ -16,6 +18,11 @@ public class Room implements Interactable {
         items = new ArrayList<>();
         monsters = new ArrayList<>();
         visited = false;
+        spawnQueue = new LinkedList<>();
+    }
+    public String getName()
+    {
+        return name;
     }
 
     public void addItem(Item i)
@@ -41,6 +48,20 @@ public class Room implements Interactable {
     public void setVisited(boolean v)
     {
         visited = v;
+    }
+    public Monster spawnNextMonster()
+    {
+        return spawnQueue.poll();
+    }
+    public void loadMonsters()
+    {
+        for (Monster m : monsters) {
+            spawnQueue.offer(m);
+        }
+    }
+    public boolean hasMonsters()
+    {
+        return !spawnQueue.isEmpty();
     }
 
     @Override
@@ -80,6 +101,16 @@ public class Room implements Interactable {
     @Override
     public void interact(Hero hero) {
         visited = true;
+        loadMonsters();
+        while(!spawnQueue.isEmpty())
+        {
+            Monster m = spawnQueue.poll();
+            while (m.getHealth() > 0 && hero.getHealth() > 0)
+            {
+                m.attack(hero);
+                hero.attack(m);
+            }
+        }
         System.out.println(this);
         for (Item item : items) {
             if (item instanceof Potion)
@@ -89,8 +120,6 @@ public class Room implements Interactable {
         if (item instanceof Armor)
             ((Armor) (item)).interact(hero);
         }
-        for (Monster m : monsters) {
-            hero.attack(m);
-        }
+        
     }
 }

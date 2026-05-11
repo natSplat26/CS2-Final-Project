@@ -4,6 +4,7 @@ public class Hero extends Character {
     private int level;
     private int experiencePoints;
     private String heroClass;
+    private Inventory<Item> inventory;
 
     public Hero(String name,int health,int maxHealth,int attackPower,int defense,int level,int experiencePoints,String heroClass)
     {
@@ -11,8 +12,12 @@ public class Hero extends Character {
         this.level = level;
         this.experiencePoints = experiencePoints;
         this.heroClass = heroClass;
+        inventory = new Inventory<>();
     }
-
+    public Inventory<Item> getInventory()
+    {
+        return inventory;
+    }
     public int getLevel()
     {
         return level;
@@ -53,6 +58,7 @@ public class Hero extends Character {
         ret += "| "+ getHealth() + "/" + getMaxHealth() + "\t|\n";
         ret += super.healthBar(getHealth(), getMaxHealth()) + "\n";
         ret = super.statBlock(ret);
+        ret += "Inventory size: " + inventory.getSize() + "\n";
         ret = endingBar(ret);
         return ret;
     }
@@ -68,6 +74,20 @@ public class Hero extends Character {
     @Override
     public void attack(Character target)
     {
-        target.setHealth(target.getHealth() - (this.getAttackPower()-target.getDefense()));
+        String targetName = target.getName();
+        if (target instanceof Monster)
+            targetName = ((Monster)(target)).getMonsterType();
+        int damage = (getAttackPower() > target.getHealth() + target.getDefense())? target.getHealth() : getAttackPower() - target.getDefense();
+        damage = (damage < 0)? 0 : damage;
+        target.setHealth(target.getHealth() - damage);
+        System.out.println("[COMBAT] " + getName() + " hits " + targetName + " for " + damage + " hp! " + targetName + " HP: " + target.getHealth() + " / " + target.getMaxHealth() );
+        if (target.getHealth() == 0)
+        {
+            String reward = "";
+            if (target instanceof Monster)
+                reward = " and gained " + ((Monster)(target)).getRewardXP();
+            System.out.println("[VICTORY] " + getName() + " has slain the " + targetName + reward );
+            gainExperience(((Monster)(target)).getRewardXP());
+        }
     }
 }

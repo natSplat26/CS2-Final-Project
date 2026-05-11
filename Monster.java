@@ -43,7 +43,11 @@ public class Monster extends Character {
     @Override
     public void attack(Character target)
     {
-        System.out.println(monsterType + "Snarls and strikes!");
-        target.setHealth(target.getHealth() - (this.getAttackPower()-target.getDefense()));
+        
+        System.out.println("[COMBAT] " + monsterType + " Snarls and strikes!");
+        int damage = (getAttackPower() > target.getHealth() + target.getDefense())? target.getHealth() : getAttackPower() - target.getDefense();
+         damage = (damage < 0)? 0 : damage;
+        System.out.println("The " + monsterType + " hits " + target.getName() + " for " + damage + " hp!" + target.getName() + " HP : " +target.getHealth() + " / " + target.getMaxHealth() );
+        target.setHealth(target.getHealth() - damage);
     }
 }

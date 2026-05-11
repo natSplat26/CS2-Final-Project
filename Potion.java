@@ -10,7 +10,10 @@ public class Potion  extends Item implements Interactable{
     @Override
     public void interact(Hero hero) {
         System.out.println("✨" + hero.getName() + " drinks " + getName() + " and recovers " + getValue() + " HP!");
-        hero.setHealth(hero.getHealth()+getValue());
+        if (getValue() >=  hero.getMaxHealth() - hero.getHealth())
+            hero.setHealth(hero.getMaxHealth());
+        else
+            hero.setHealth(hero.getHealth() + getValue());
     }
     
 }
